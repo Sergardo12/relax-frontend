@@ -1,6 +1,7 @@
 // src/components/domain/auth/AuthForm.tsx
 "use client";
 import React, { useState } from "react";
+import { useRouter } from "next/navigation";
 
 type AuthFormProps = {
   title: "Iniciar sesión" | "Registrarse";
@@ -8,7 +9,7 @@ type AuthFormProps = {
   onSubmit: (data: { email: string; password: string; confirmPassword?: string }) => Promise<void> | void;
 };
 
-function FloatingInput({
+export function FloatingInput({
   id,
   label,
   type = "text",
@@ -70,11 +71,18 @@ export function AuthForm({ title, mode, onSubmit }: AuthFormProps) {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [loading, setLoading] = useState(false);
 
+  const router = useRouter();
+
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     setLoading(true);
     try {
       await onSubmit({ email, password, confirmPassword });
+
+      if (mode === "register") {
+        router.push("/auth/register2");
+      }
+
     } finally {
       setLoading(false);
     }
