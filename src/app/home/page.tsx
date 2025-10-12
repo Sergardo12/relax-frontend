@@ -16,7 +16,7 @@ export default function HomePage() {
     <Layout>
       <div className="flex flex-col gap-8 p-6">
         {/* Banner superior */}
-        <WelcomeBanner nombre="Cristobal" />
+        <WelcomeBanner/>
 
         {/* Sección principal */}
         <div className="flex flex-col md:flex-row justify-between gap-6">

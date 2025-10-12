@@ -16,7 +16,7 @@ export const useAuthStore = create<AuthState>((set) => ({
     // Guarda token localmente
     localStorage.setItem("token", token);
 
-    // Simula fetch de usuario (conectar API real aquí)
+    //Se conecta el API
     const fakeUser: User = { id: "u1", name: "Demo", email: "demo@relax.local" };
 
     set({
