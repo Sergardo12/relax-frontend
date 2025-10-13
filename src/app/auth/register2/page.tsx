@@ -1,19 +1,19 @@
 "use client";
 
-import React, { useState } from "react";
-import { FloatingInput } from "@/components/domain/auth/AuthForm"; 
+import React from "react";
+import { FloatingInput } from "@/components/domain/auth/AuthForm";
+import { useUserStore } from "@/store/useUserStore";
 
 export default function RegisterStep2() {
-  const [nombres, setNombres] = useState("");
-  const [apellidos, setApellidos] = useState("");
-  const [dni, setDni] = useState("");
-  const [fechaNacimiento, setFechaNacimiento] = useState("");
-  const [telefono, setTelefono] = useState("");
+  const { nombres, apellidos, setNombres, setApellidos } = useUserStore();
+  const [dni, setDni] = React.useState("");
+  const [fechaNacimiento, setFechaNacimiento] = React.useState("");
+  const [telefono, setTelefono] = React.useState("");
 
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     console.log({ nombres, apellidos, dni, fechaNacimiento, telefono });
-    // Aquí se conecta con el backend
+    // Aquí puedes llamar a tu backend
   }
 
   return (
