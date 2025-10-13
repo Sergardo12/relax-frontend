@@ -1,4 +1,4 @@
-// src/components/domain/auth/AuthForm.tsx
+
 "use client";
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
