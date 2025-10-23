@@ -6,7 +6,7 @@ import { useRouter } from "next/navigation";
 type AuthFormProps = {
   title: "Iniciar sesión" | "Registrarse";
   mode: "login" | "register";
-  onSubmit: (data: { email: string; password: string; confirmPassword?: string }) => Promise<void> | void;
+  onSubmit: (data: { correo: string; contraseña: string; confirmarContraseña?: string }) => Promise<void> | void;
 };
 
 export function FloatingInput({
@@ -66,22 +66,17 @@ export function FloatingInput({
 }
 
 export function AuthForm({ title, mode, onSubmit }: AuthFormProps) {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
+  const [correo, setCorreo] = useState("");
+  const [contraseña, setContraseña] = useState("");
+  const [confirmarContraseña, setconfirmarContraseña] = useState("");
   const [loading, setLoading] = useState(false);
 
-  const router = useRouter();
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     setLoading(true);
     try {
-      await onSubmit({ email, password, confirmPassword });
-
-      if (mode === "register") {
-        router.push("/auth/register2");
-      }
+      await onSubmit({ correo, contraseña, confirmarContraseña });
 
     } finally {
       setLoading(false);
@@ -92,17 +87,17 @@ export function AuthForm({ title, mode, onSubmit }: AuthFormProps) {
     <form onSubmit={handleSubmit} className="space-y-6 p-6 rounded-2xl bg-white shadow-lg">
       <h1 className="text-center text-2xl font-semibold text-gray-800">{title}</h1>
 
-      <FloatingInput id="email" label="Correo electrónico" type="email" value={email} onChange={setEmail} required />
+      <FloatingInput id="email" label="Correo electrónico" type="email" value={correo} onChange={setCorreo} required />
 
-      <FloatingInput id="password" label="Contraseña" type="password" value={password} onChange={setPassword} required />
+      <FloatingInput id="password" label="Contraseña" type="password" value={contraseña} onChange={setContraseña} required />
 
       {mode === "register" && (
         <FloatingInput
           id="confirmPassword"
           label="Confirmar contraseña"
           type="password"
-          value={confirmPassword}
-          onChange={setConfirmPassword}
+          value={confirmarContraseña}
+          onChange={setconfirmarContraseña}
           required
         />
       )}
