@@ -1,29 +1,91 @@
-import React from "react";
-import { Home, CalendarDays, HelpCircle, BadgeDollarSign, ChartColumn } from "lucide-react";
+"use client";
 
-const menuItems = [
-  { name: "Inicio", icon: <Home size={18} /> },
-  { name: "Mis Tratamientos", icon: <CalendarDays size={18} /> },
-  { name: "Mis Pagos", icon: <BadgeDollarSign size={18} /> },
-  { name: "Estadísticas", icon: <ChartColumn size={18} /> },
-  { name: "Ayuda", icon: <HelpCircle size={18} /> },
-];
+import Link from "next/link";
+import { usePathname, useRouter } from "next/navigation";
+import { useAuthStore } from "@/lib/store/auth.store";
+import { Home, Calendar, CreditCard, LogOut } from "lucide-react";
+import { useState } from "react";
 
 export default function Sidebar() {
+  const pathname = usePathname();
+  const router = useRouter();
+  const { logout } = useAuthStore();
+  const [isLoggingOut, setIsLoggingOut] = useState(false);
+
+  const menuItems = [
+    {
+      label: "Inicio",
+      href: "/paciente",
+      icon: Home,
+    },
+    {
+      label: "Mis Tratamientos",
+      href: "/paciente/tratamientos",
+      icon: Calendar,
+    },
+    {
+      label: "Mi Suscripción",
+      href: "/paciente/suscripcion",
+      icon: CreditCard,
+    },
+  ];
+
+  const handleLogout = async () => {
+    if (confirm("¿Estás seguro de que quieres cerrar sesión?")) {
+      setIsLoggingOut(true);
+      await logout();
+      // El método logout ya redirige automáticamente
+    }
+  };
+
   return (
-    <aside className="w-60 bg-white border-r border-gray-200 p-4 flex flex-col">
-      <div className="text-cyan-600 font-bold text-xl mb-6">Relax Spa</div>
-      <nav className="flex flex-col gap-3">
-        {menuItems.map((item) => (
-          <button
-            key={item.name}
-            className="flex items-center gap-3 p-2 rounded-lg text-gray-700 hover:bg-cyan-50 hover:text-cyan-700 transition"
-          >
-            {item.icon}
-            <span>{item.name}</span>
-          </button>
-        ))}
+    <aside className="w-64 bg-white border-r border-gray-200 h-screen flex flex-col">
+      {/* Logo */}
+      <div className="p-6 border-b border-gray-200">
+        <h2 className="text-2xl font-bold text-cyan-600">Relax Spa</h2>
+      </div>
+
+      {/* Menu Items */}
+      <nav className="flex-1 p-4 space-y-2">
+        {menuItems.map((item) => {
+          const Icon = item.icon;
+          const isActive = pathname === item.href;
+
+          return (
+            <Link
+              key={item.href}
+              href={item.href}
+              className={`
+                flex items-center gap-3 px-4 py-3 rounded-lg transition-colors
+                ${
+                  isActive
+                    ? "bg-cyan-50 text-cyan-600 font-medium"
+                    : "text-gray-700 hover:bg-gray-50"
+                }
+              `}
+            >
+              <Icon className="w-5 h-5" />
+              <span>{item.label}</span>
+            </Link>
+          );
+        })}
       </nav>
+
+      {/* Logout Button */}
+      <div className="p-4 border-t border-gray-200">
+        <button
+          onClick={handleLogout}
+          disabled={isLoggingOut}
+          className="
+            w-full flex items-center gap-3 px-4 py-3 rounded-lg 
+            text-red-600 hover:bg-red-50 transition-colors
+            disabled:opacity-50 disabled:cursor-not-allowed
+          "
+        >
+          <LogOut className="w-5 h-5" />
+          <span>{isLoggingOut ? "Cerrando..." : "Cerrar sesión"}</span>
+        </button>
+      </div>
     </aside>
   );
 }

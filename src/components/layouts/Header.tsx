@@ -1,6 +1,6 @@
 import React from "react";
 import { HeartPulse, User } from "lucide-react";
-import { useUserStore } from "@/store/useUserStore";
+import { useUserStore } from "@/lib/store/useUserStore";
 
 export default function Header() {
   const { nombres, apellidos } = useUserStore();
@@ -16,9 +16,7 @@ export default function Header() {
       {/* Usuario actual */}
       <div className="flex items-center gap-2 text-cyan-700 font-semibold">
         <User className="w-5 h-5" />
-        {nombres || apellidos
-          ? `${nombres} ${apellidos}`
-          : "Usuario Invitado"}
+        {nombres || apellidos ? `${nombres} ${apellidos}` : "Usuario Invitado"}
       </div>
     </header>
   );
