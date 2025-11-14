@@ -1,10 +1,22 @@
-import Image from "next/image";
+"use client";
 
-export default function Home() {
+import { useEffect } from 'react';
+import { useRouter } from 'next/navigation';
+import { Loader2 } from 'lucide-react';
+
+export default function HomePage() {
+  const router = useRouter();
+
+  useEffect(() => {
+    router.replace('/auth/');
+  }, [router]);
+
   return (
-      <main className="flex flex-col items-center p-24">
-       <span className="text-5xl *:">Hola mundo</span>
-      </main>
-      
+    <div className="flex items-center justify-center h-screen bg-gradient-to-br from-cyan-50 to-blue-50">
+      <div className="text-center">
+        <Loader2 className="w-12 h-12 animate-spin text-cyan-600 mx-auto mb-4" />
+        <p className="text-gray-600">Redirigiendo...</p>
+      </div>
+    </div>
   );
 }
