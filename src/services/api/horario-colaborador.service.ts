@@ -4,24 +4,24 @@ import apiClient from '@/lib/api/client';
 import {
   CrearHorarioColaboradorDto,
   ActualizarHorarioColaboradorDto,
-  HorarioColaborador,
+  HorarioColaboradorResponse,
 } from '@/types';
 
 export const horarioColaboradorService = {
   // POST /horarios-colaborador - Crear horario
-  create: async (dto: CrearHorarioColaboradorDto): Promise<HorarioColaborador> => {
+  create: async (dto: CrearHorarioColaboradorDto): Promise<HorarioColaboradorResponse> => {
     const { data } = await apiClient.post('/horarios-colaborador', dto);
     return data;
   },
 
   // GET /horarios-colaborador/colaborador/:idColaborador - Listar horarios por colaborador
-  getByColaborador: async (idColaborador: string): Promise<HorarioColaborador[]> => {
+  getByColaborador: async (idColaborador: string): Promise<HorarioColaboradorResponse[]> => {
     const { data } = await apiClient.get(`/horarios-colaborador/colaborador/${idColaborador}`);
     return data;
   },
 
   // GET /horarios-colaborador/:id - Obtener horario por ID
-  getById: async (id: string): Promise<HorarioColaborador> => {
+  getById: async (id: string): Promise<HorarioColaboradorResponse> => {
     const { data } = await apiClient.get(`/horarios-colaborador/${id}`);
     return data;
   },
@@ -30,7 +30,7 @@ export const horarioColaboradorService = {
   update: async (
     id: string,
     dto: ActualizarHorarioColaboradorDto
-  ): Promise<HorarioColaborador> => {
+  ): Promise<HorarioColaboradorResponse> => {
     const { data } = await apiClient.put(`/horarios-colaborador/${id}`, dto);
     return data;
   },
