@@ -11,6 +11,7 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { toast } from "sonner";
+import { formatDate } from "@/lib/utils/date";
 
 export default function DetalleTratamientoPage() {
   const { id } = useParams();
@@ -148,7 +149,7 @@ export default function DetalleTratamientoPage() {
               <Calendar className="w-4 h-4 text-gray-500" />
               <div>
                 <p className="text-xs text-gray-500">Inicio</p>
-                <p className="font-medium">{new Date(tratamiento.fechaInicio).toLocaleDateString()}</p>
+                <p className="font-medium">{formatDate(tratamiento.fechaInicio)}</p>
               </div>
             </div>
             <div className="flex items-center gap-2">

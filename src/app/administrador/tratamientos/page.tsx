@@ -6,6 +6,8 @@ import { Plus, Calendar, User, DollarSign, Activity, Search } from "lucide-react
 import { useEffect, useState } from "react";
 import { tratamientoService } from "@/services/api";
 import { TratamientoResponse } from "@/types";
+import { formatYearDropdown } from "react-day-picker";
+import { formatDate } from "@/lib/utils/date";
 
 export default function TratamientosPage() {
   const { isAuthenticated, loading: authLoading } = useAuthGuard({ allowedRoles: ['administrador'] });
@@ -139,7 +141,7 @@ export default function TratamientosPage() {
               <div className="flex items-center justify-between pt-3 border-t">
                 <div className="flex items-center gap-1 text-xs text-gray-500">
                   <Calendar className="w-3 h-3" />
-                  {new Date(t.fechaInicio).toLocaleDateString()}
+                  {formatDate(t.fechaInicio)}
                 </div>
                 <span className={`text-xs px-2 py-1 rounded-full font-medium ${
                   t.estado === 'ACTIVO' ? 'bg-green-100 text-green-700' :
