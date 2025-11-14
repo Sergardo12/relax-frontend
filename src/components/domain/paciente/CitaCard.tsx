@@ -57,7 +57,9 @@ export default function CitaCard({ cita, onClick }: CitaCardProps) {
 
   // 📅 Formatear fecha
   const formatearFecha = (fecha: string) => {
-    const date = new Date(fecha + 'T00:00:00');
+   const soloFecha = fecha.split('T')[0];
+    const [year, month, day] = soloFecha.split('-').map(Number);
+    const date = new Date(year, month - 1, day);
     return date.toLocaleDateString('es-PE', {
       weekday: 'short',
       day: '2-digit',
@@ -91,7 +93,7 @@ export default function CitaCard({ cita, onClick }: CitaCardProps) {
             <Calendar className="w-5 h-5 text-cyan-600" />
           </div>
           <div className="flex-1 min-w-0">
-            <p className="text-xs text-gray-500 font-medium">Fecha shibac</p>
+            <p className="text-xs text-gray-500 font-medium">Fecha</p>
             <p className="text-sm font-semibold text-gray-800 truncate">
               {formatearFecha(cita.fecha)}
             </p>
