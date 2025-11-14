@@ -1,17 +1,17 @@
 // ==================== USUARIO SERVICE ====================
 
 import apiClient from '@/lib/api/client';
-import { CrearUsuarioDto, Usuario, UsuarioPerfilResponse } from '@/types';
+import { CrearUsuarioDto, UsuarioPerfilResponse, UsuarioResponse } from '@/types';
 
 export const usuarioService = {
   // POST /usuarios - Crear usuario genérico
-  create: async (dto: CrearUsuarioDto): Promise<Usuario> => {
+  create: async (dto: CrearUsuarioDto): Promise<UsuarioResponse> => {
     const { data } = await apiClient.post('/usuarios', dto);
     return data;
   },
 
   // GET /usuarios - Listar todos los usuarios (requiere rol admin)
-  getAll: async (): Promise<Usuario[]> => {
+  getAll: async (): Promise<UsuarioResponse[]> => {
     const { data } = await apiClient.get('/usuarios');
     return data;
   },
