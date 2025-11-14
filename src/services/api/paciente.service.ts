@@ -1,11 +1,12 @@
 // ==================== PACIENTE SERVICE ====================
 
-import apiClient from '@/lib/api/client';
+import apiClient from "@/lib/api/client";
 import {
   CompletarDatosPacienteDto,
   CompletarDatosPacienteResponse,
   PacienteMeResponse,
-} from '@/types';
+  PacienteResponse,
+} from "@/types";
 
 export const pacienteService = {
   /**
@@ -15,7 +16,7 @@ export const pacienteService = {
     dto: CompletarDatosPacienteDto
   ): Promise<CompletarDatosPacienteResponse> => {
     const { data } = await apiClient.post<CompletarDatosPacienteResponse>(
-      '/pacientes/completar-datos',
+      "/pacientes/completar-datos",
       dto
     );
     return data;
@@ -25,9 +26,24 @@ export const pacienteService = {
    * GET /pacientes/me - Obtener datos completos del paciente autenticado
    */
   getMe: async (): Promise<PacienteMeResponse> => {
-    const { data } = await apiClient.get<PacienteMeResponse>('/pacientes/me');
+    const { data } = await apiClient.get<PacienteMeResponse>("/pacientes/me");
     return data;
   },
 
-  // ... otros métodos que ya tenías
+  listarPacientes: async (): Promise<PacienteResponse[]> => {
+    try {
+      console.log("📡 Haciendo petición a /pacientes...");
+      const response = await apiClient.get<PacienteResponse[]>("/pacientes");
+
+      console.log("✅ Response completo:", response); // 🔥 TODO el objeto
+      console.log("✅ Response.data:", response.data); // 🔥 Solo data
+      console.log("✅ Response.status:", response.status); // 🔥 Status code
+
+      return response.data;
+    } catch (error: any) {
+      console.error("❌ Error:", error);
+      console.error("❌ Error.response:", error.response);
+      throw error;
+    }
+  },
 };

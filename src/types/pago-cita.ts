@@ -30,6 +30,11 @@ export interface PagarConEfectivoDto {
   email: string;
 }
 
+export interface PagarConMembresiaDto {
+  idCita: string;
+  email: string;
+}
+
 // Responses
 export interface PagoCitaResponse {
   id: string;

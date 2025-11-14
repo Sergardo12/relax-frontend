@@ -6,6 +6,7 @@ import {
   PagarConYapeDto,
   PagarConEfectivoDto,
   PagoCitaResponse,
+  PagarConMembresiaDto,
 } from '@/types';
 
 export const pagoCitaService = {
@@ -24,6 +25,11 @@ export const pagoCitaService = {
   // POST /pagos-cita/efectivo - Pagar con efectivo
   pagarConEfectivo: async (dto: PagarConEfectivoDto): Promise<PagoCitaResponse> => {
     const { data } = await apiClient.post('/pagos-cita/efectivo', dto);
+    return data;
+  },
+
+  pagarConMembresia: async (dto: PagarConMembresiaDto): Promise<PagoCitaResponse> => {
+    const { data } = await apiClient.post('/pagos-cita/membresia', dto);
     return data;
   },
 

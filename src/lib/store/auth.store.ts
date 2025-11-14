@@ -274,22 +274,23 @@ export const useAuthStore = create<AuthState>((set, get) => ({
     }
 
     try {
-      let datos = null;
-      
-      // Según el rol, llamar al endpoint correcto
-      if (usuario.rol === 'paciente') {
-        datos = await pacienteService.getMe();
-        console.log('✅ Datos del paciente obtenidos:', datos);
-      } else if (usuario.rol === 'colaborador') {
-        datos = await colaboradorService.getMe();
-        console.log('✅ Datos del colaborador obtenidos:', datos);
-      }
-      
-      return datos;
-      
-    } catch (error) {
-      console.error('❌ Error obteniendo datos completos:', error);
-      return null;
+    let datos = null;
+    
+    // Según el rol, llamar al endpoint correcto
+    if (usuario.rol === 'paciente') {
+      datos = await pacienteService.getMe();
+      console.log('✅ Datos del paciente obtenidos:', datos);
+    } else if (['colaborador', 'administrador', 'recepcionista'].includes(usuario.rol)) {
+      // 🔥 TODOS estos roles usan colaboradorService
+      datos = await colaboradorService.getMe();
+      console.log('✅ Datos del colaborador obtenidos:', datos);
     }
+    
+    return datos;
+    
+  } catch (error) {
+    console.error('❌ Error obteniendo datos completos:', error);
+    return null;
+  }
   },
 }));

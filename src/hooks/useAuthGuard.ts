@@ -40,7 +40,7 @@ export function useAuthGuard(options?: UseAuthGuardOptions) {
             router.push('/colaborador');
             break;
           case 'admin':
-            router.push('/admin');
+            router.push('/administrador');
             break;
           default:
             router.push('/');

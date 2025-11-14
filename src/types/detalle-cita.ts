@@ -10,6 +10,8 @@ export interface CrearDetalleCitaDto {
   idServicio: string;
   idColaborador: string;
   cantidad?: number;
+  pagarConMembresia?: boolean;
+
 }
 
 export interface ActualizarObservacionesDto {
@@ -27,10 +29,10 @@ export interface DetalleCitaResponse {
   precioUnitario: number;
   cantidad: number;
   subtotal: number;
+  esConMembresia: boolean;
   observaciones?: string;
   diagnostico?: string;
   recomendaciones?: string;
   pagarConMembresia?: boolean;
-  idConsumoBeneficio?: string;
   fechaRegistro?: Date | string;
 }
