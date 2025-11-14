@@ -8,7 +8,7 @@ export default function HomePage() {
   const router = useRouter();
 
   useEffect(() => {
-    router.replace('/auth/');
+    router.replace('/auth/register');
   }, [router]);
 
   return (
