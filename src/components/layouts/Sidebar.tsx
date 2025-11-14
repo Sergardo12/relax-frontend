@@ -50,16 +50,15 @@ export default function Sidebar() {
                   ? "bg-cyan-50 text-cyan-600 font-medium"
                   : "text-gray-700 hover:bg-gray-50"
                 }
-                ${item.highlight ? "ring-2 ring-purple-200" : ""}
               `}
             >
               <Icon className="w-5 h-5" />
               <span>{item.label}</span>
-              {item.highlight && (
+              {/* {item.highlight && (
                 <span className="ml-auto text-xs bg-purple-500 text-white px-2 py-1 rounded-full">
                   Beta
                 </span>
-              )}
+              )} */}
             </Link>
           );
         })}
