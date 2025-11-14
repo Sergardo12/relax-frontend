@@ -280,7 +280,7 @@ export default function DetalleTratamientoPage() {
                         <span className="font-semibold">Sesión {index + 1}</span>
                         <div className="flex items-center gap-1 text-sm text-gray-600">
                           <Calendar className="w-4 h-4" />
-                          {new Date(sesion.fecha).toLocaleDateString()}
+                          {formatDate(sesion.fecha)}
                         </div>
                         <div className="flex items-center gap-1 text-sm text-gray-600">
                           <Clock className="w-4 h-4" />
