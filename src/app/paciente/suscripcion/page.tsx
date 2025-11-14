@@ -19,6 +19,7 @@ import { Crown, Sparkles, CheckCircle, Gift, Zap } from "lucide-react";
 import { toast } from "sonner";
 import PagoSuscripcionModal from "@/components/domain/suscripcion/PagoSuscripcionModal";
 import Layout from "@/components/layouts/Layout";
+import { formatDate } from "@/lib/utils/date";
 
 export default function SuscripcionPage() {
   const { isAuthenticated, loading: authLoading } = useAuthGuard({ allowedRoles: ['paciente'] });
@@ -135,21 +136,13 @@ export default function SuscripcionPage() {
               <div>
                 <p className="text-sm text-gray-600 mb-1">Fecha de Inicio</p>
                 <p className="font-semibold text-gray-800">
-                  {new Date(miSuscripcion.fechaInicio).toLocaleDateString('es-PE', {
-                    day: '2-digit',
-                    month: 'long',
-                    year: 'numeric'
-                  })}
+                  {formatDate(miSuscripcion.fechaInicio)}
                 </p>
               </div>
               <div>
                 <p className="text-sm text-gray-600 mb-1">Fecha de Vencimiento</p>
                 <p className="font-semibold text-gray-800">
-                  {new Date(miSuscripcion.fechaFin).toLocaleDateString('es-PE', {
-                    day: '2-digit',
-                    month: 'long',
-                    year: 'numeric'
-                  })}
+                  {formatDate(miSuscripcion.fechaFin)}
                 </p>
               </div>
             </div>
