@@ -11,6 +11,7 @@ import { Activity, Calendar, CheckCircle, Clock, User, Loader2, ChevronRight } f
 import { toast } from "sonner";
 import Layout from "@/components/layouts/Layout";
 import ModalDetalleTratamiento from "@/components/domain/paciente/ModalDatalleTratamiento";
+import { formatDate } from "@/lib/utils/date";
 
 
 export default function MisTratamientosPage() {
@@ -127,7 +128,7 @@ export default function MisTratamientosPage() {
                     <div className="flex items-center gap-2 text-gray-600">
                       <Calendar className="w-4 h-4" />
                       <span className="text-sm">
-                        {new Date(tratamiento.fechaInicio.split('T')[0] + 'T12:00:00').toLocaleDateString('es-PE')}
+                        {formatDate(tratamiento.fechaInicio)}
                       </span>
                     </div>
 
