@@ -21,6 +21,7 @@ import { toast } from "sonner";
 import Layout from "@/components/layouts/Layout";
 import ModalNuevaVenta from "@/components/domain/administrador/ModalNuevaVenta";
 import ModalDetalleVenta from "@/components/domain/administrador/ModalDetalleVenta";
+import { esHoy, formatDate } from "@/lib/utils/date";
 
 
 export default function VentasPage() {
@@ -88,12 +89,9 @@ export default function VentasPage() {
   }
 
   const totalVentas = ventas.reduce((sum, v) => sum + v.total, 0);
-  const ventasHoy = ventas.filter(v => {
-    const hoy = new Date().toISOString().split('T')[0];
-    return v.fecha === hoy;
-  }).length;
+  const ventasHoy = ventas.filter(v =>esHoy(v.fecha)).length
   const totalHoy = ventas
-    .filter(v => v.fecha === new Date().toISOString().split('T')[0])
+    .filter(v => esHoy(v.fecha))
     .reduce((sum, v) => sum + v.total, 0);
 
   if (authLoading || !isAuthenticated) return null;
@@ -217,11 +215,7 @@ export default function VentasPage() {
                         <div className="flex items-center gap-2 text-gray-600">
                           <Calendar className="w-4 h-4" />
                           <span>
-                            {new Date(venta.fecha.split('T')[0] + 'T12:00:00').toLocaleDateString('es-PE', {
-                              day: '2-digit',
-                              month: 'long',
-                              year: 'numeric'
-                            })}
+                            {formatDate(venta.fecha)}
                           </span>
                         </div>
                         <div className="flex items-center gap-2 text-gray-600">
