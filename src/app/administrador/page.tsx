@@ -7,14 +7,15 @@ import { useAuthGuard } from "@/hooks/useAuthGuard";
 import { 
   ventaProductoService, 
   registroGastoService,
-  productoService 
+  productoService, 
+  citaService
 } from "@/services/api";
 import { 
   VentaProductoResponse, 
   RegistroGastoResponse,
-  ProductoResponse 
+  ProductoResponse, 
+  CitaResponse
 } from "@/types";
-import Layout from "@/components/layouts/Layout";
 import ChatbotWidget from "@/components/domain/administrador/ChatbotWidget";
 import { 
   TrendingUp, 
@@ -40,12 +41,13 @@ import {
   ResponsiveContainer
 } from 'recharts';
 import Link from "next/link";
+import { esHoy, formatDate } from "@/lib/utils/date";
 
 interface DashboardData {
   ventasMes: number;
   gastosMes: number;
   utilidadMes: number;
-  citasHoy: number;
+  citasHoy: CitaResponse[];
   productosStockBajo: number;
   ventasHoy: number;
   ventasSemana: VentaProductoResponse[];
@@ -64,7 +66,7 @@ export default function AdministradorDashboard() {
     ventasMes: 0,
     gastosMes: 0,
     utilidadMes: 0,
-    citasHoy: 0,
+    citasHoy: [],
     productosStockBajo: 0,
     ventasHoy: 0,
     ventasSemana: [],
@@ -87,10 +89,11 @@ export default function AdministradorDashboard() {
 
   async function cargarDatos() {
     try {
-      const [ventas, gastos, productos] = await Promise.all([
+      const [ventas, gastos, productos, citas] = await Promise.all([
         ventaProductoService.getAll(),
         registroGastoService.getAll(),
-        productoService.getAll()
+        productoService.getAll(),
+        citaService.getAll()
       ]);
 
       // Fechas
@@ -126,6 +129,11 @@ export default function AdministradorDashboard() {
 
       // Top productos vendidos (calcular desde detalles)
       const productosVendidos: Record<string, { nombre: string; cantidad: number; total: number }> = {};
+
+      const citasDeHoy = citas
+      .filter(c => esHoy(c.fecha))
+      .sort((a, b) => a.hora.localeCompare(b.hora))
+      .slice(0, 5);
       
       ventas.forEach(venta => {
         if (venta.detalles) {
@@ -152,7 +160,7 @@ export default function AdministradorDashboard() {
         ventasMes,
         gastosMes,
         utilidadMes: ventasMes - gastosMes,
-        citasHoy: 0, // TODO: Conectar cuando tengas el módulo de citas
+        citasHoy: citasDeHoy, 
         productosStockBajo: productosAlerta.length,
         ventasHoy,
         ventasSemana,
@@ -316,7 +324,7 @@ export default function AdministradorDashboard() {
                   </div>
                 </div>
                 <p className="text-sm text-gray-600 mb-1">Citas Hoy</p>
-                <p className="text-3xl font-bold text-gray-800">{data.citasHoy}</p>
+                <p className="text-3xl font-bold text-gray-800">{data.citasHoy.length}</p>
                 <p className="text-xs text-gray-500 mt-2">Programadas</p>
               </div>
 
@@ -368,66 +376,77 @@ export default function AdministradorDashboard() {
               </ResponsiveContainer>
             </div>
             {/* Próximas Citas de Hoy */}
-<div className="bg-white rounded-xl shadow-md p-6 border border-gray-100">
-  <div className="flex items-center justify-between mb-4">
-    <h2 className="text-xl font-bold text-gray-800 flex items-center gap-2">
-      <Calendar className="w-6 h-6 text-cyan-600" />
-      Citas de Hoy
-    </h2>
-    <span className="px-3 py-1 bg-cyan-100 text-cyan-700 rounded-full text-sm font-semibold">
-      4 citas
-    </span>
-  </div>
+          <div className="bg-white rounded-xl shadow-md p-6 border border-gray-100">
+            <div className="flex items-center justify-between mb-4">
+              <h2 className="text-xl font-bold text-gray-800 flex items-center gap-2">
+                <Calendar className="w-6 h-6 text-cyan-600" />
+                Citas de Hoy
+              </h2>
+              <span className="px-3 py-1 bg-cyan-100 text-cyan-700 rounded-full text-sm font-semibold">
+                {data.citasHoy.length} citas
+              </span>
+            </div>
 
-  <div className="space-y-3">
-    {/* Citas hardcodeadas para demo */}
-    {[
-      { hora: '09:00', paciente: 'María González', tratamiento: 'Masaje Relajante', estado: 'confirmada' },
-      { hora: '11:00', paciente: 'Carlos Ruiz', tratamiento: 'Facial Limpieza', estado: 'confirmada' },
-      { hora: '14:30', paciente: 'Ana Torres', tratamiento: 'Reflexología', estado: 'pendiente' },
-      { hora: '16:00', paciente: 'Luis Mendoza', tratamiento: 'Aromaterapia', estado: 'confirmada' }
-    ].map((cita, index) => (
-      <div 
-        key={index}
-        className="flex items-center gap-4 p-3 bg-gradient-to-r from-cyan-50 to-blue-50 rounded-lg border border-cyan-100 hover:shadow-md transition"
-      >
-        {/* Hora */}
-        <div className="flex-shrink-0 w-16 text-center">
-          <p className="text-lg font-bold text-cyan-600">{cita.hora}</p>
-        </div>
-        
-        {/* Separador */}
-        <div className="h-12 w-px bg-cyan-200"></div>
-        
-        {/* Info */}
-        <div className="flex-1">
-          <p className="font-semibold text-gray-800">{cita.paciente}</p>
-          <p className="text-sm text-gray-600">{cita.tratamiento}</p>
-        </div>
-        
-        {/* Estado */}
-        <div>
-          <span className={`px-2 py-1 rounded-full text-xs font-medium ${
-            cita.estado === 'confirmada' 
-              ? 'bg-green-100 text-green-700' 
-              : 'bg-yellow-100 text-yellow-700'
-          }`}>
-            {cita.estado}
-          </span>
-        </div>
-      </div>
-    ))}
-    
-    {/* Ver todas */}
-    <Link
-      href="/administrador/citas"
-      className="block text-center py-2 text-cyan-600 hover:text-cyan-700 font-medium text-sm hover:bg-cyan-50 rounded-lg transition"
-    >
-      Ver todas las citas →
-    </Link>
-  </div>
-</div>
-
+            {data.citasHoy.length === 0 ? (
+              <div className="text-center py-8">
+                <Calendar className="w-12 h-12 text-gray-300 mx-auto mb-2" />
+                <p className="text-gray-500">No hay citas programadas para hoy</p>
+              </div>
+            ) : (
+              <div className="space-y-3">
+                {data.citasHoy.map((cita) => (
+                  <div 
+                    key={cita.id}
+                    className="flex items-center gap-4 p-3 bg-gradient-to-r from-cyan-50 to-blue-50 rounded-lg border border-cyan-100 hover:shadow-md transition"
+                  >
+                    {/* Hora */}
+                    <div className="flex-shrink-0 w-16 text-center">
+                      <p className="text-lg font-bold text-cyan-600">{cita.hora}</p>
+                    </div>
+                    
+                    {/* Separador */}
+                    <div className="h-12 w-px bg-cyan-200"></div>
+                    
+                    {/* Info */}
+                    <div className="flex-1">
+                      <p className="font-semibold text-gray-800">
+                        {cita.paciente 
+                          ? `${cita.paciente.nombres} ${cita.paciente.apellidos}`
+                          : 'Paciente sin datos'
+                        }
+                      </p>
+                      <p className="text-sm text-gray-600">
+                        {formatDate(cita.fecha)}
+                      </p>
+                    </div>
+                    
+                    {/* Estado */}
+                    <div>
+                      <span className={`px-2 py-1 rounded-full text-xs font-medium ${
+                        cita.estado === 'confirmada' 
+                          ? 'bg-green-100 text-green-700'
+                          : cita.estado === 'completada'
+                          ? 'bg-blue-100 text-blue-700'
+                          : cita.estado === 'cancelada'
+                          ? 'bg-red-100 text-red-700'
+                          : 'bg-yellow-100 text-yellow-700'
+                      }`}>
+                        {cita.estado}
+                      </span>
+                    </div>
+                  </div>
+                ))}
+                
+                {/* Ver todas */}
+                <Link
+                  href="/administrador/citas"
+                  className="block text-center py-2 text-cyan-600 hover:text-cyan-700 font-medium text-sm hover:bg-cyan-50 rounded-lg transition"
+                >
+                  Ver todas las citas →
+                </Link>
+              </div>
+            )}
+          </div>
 
             {/* Alertas */}
             {data.productosAlerta.length > 0 && (
