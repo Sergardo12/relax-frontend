@@ -21,7 +21,7 @@ import { toast } from "sonner";
 import Layout from "@/components/layouts/Layout";
 import ModalNuevaVenta from "@/components/domain/administrador/ModalNuevaVenta";
 import ModalDetalleVenta from "@/components/domain/administrador/ModalDetalleVenta";
-import { esHoy, formatDate } from "@/lib/utils/date";
+import { esHoy, formatDate, getHoyString } from "@/lib/utils/date";
 
 
 export default function VentasPage() {
@@ -89,10 +89,18 @@ export default function VentasPage() {
   }
 
   const totalVentas = ventas.reduce((sum, v) => sum + v.total, 0);
-  const ventasHoy = ventas.filter(v =>esHoy(v.fecha)).length
-  const totalHoy = ventas
-    .filter(v => esHoy(v.fecha))
-    .reduce((sum, v) => sum + v.total, 0);
+    console.log('🔍 Fecha de hoy (helper):', getHoyString());
+    console.log('🔍 Total ventas:', ventas.length);
+    console.log('🔍 Fechas de ventas:', ventas.map(v => v.fecha));
+    console.log('🔍 Ventas filtradas hoy:', ventas.filter(v => esHoy(v.fecha)));
+
+    const ventasHoy = ventas.filter(v => esHoy(v.fecha)).length;
+    const totalHoy = ventas
+      .filter(v => esHoy(v.fecha))
+      .reduce((sum, v) => sum + v.total, 0);
+
+    console.log('🔍 Ventas hoy (count):', ventasHoy);
+    console.log('🔍 Total hoy:', totalHoy);
 
   if (authLoading || !isAuthenticated) return null;
 
