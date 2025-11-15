@@ -77,8 +77,8 @@ export default function PacientesAdminPage() {
   if (authLoading || !isAuthenticated) return null;
 
   return (
-    <Layout>
-      <div className="p-6 max-w-7xl mx-auto">
+    <div>
+        <div className="p-6 max-w-7xl mx-auto">
         {/* Header */}
         <div className="mb-6">
           <h1 className="text-3xl font-bold text-gray-800">Gestión de Pacientes</h1>
@@ -263,6 +263,6 @@ export default function PacientesAdminPage() {
           </div>
         </Modal>
       )}
-    </Layout>
+    </div>
   );
 }
