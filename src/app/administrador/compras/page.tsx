@@ -20,7 +20,7 @@ import { toast } from "sonner";
 import Layout from "@/components/layouts/Layout";
 import ModalNuevaCompra from "@/components/domain/administrador/ModalNuevaCompra";
 import ModalDetalleCompra from "@/components/domain/administrador/ModalDetalleCompra";
-import { esHoy } from "@/lib/utils/date";
+import { esHoy, formatDate } from "@/lib/utils/date";
 
 
 export default function ComprasPage() {
@@ -143,7 +143,7 @@ export default function ComprasPage() {
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm text-gray-600">Compras Hoy</p>
-                <p className="text-2xl font-bold text-cyan-600">{comprasHoy}</p>
+                <p className="text-2xl font-bold text-cyan-600">{totalHoy}</p>
               </div>
               <Calendar className="w-10 h-10 text-cyan-400" />
             </div>
@@ -208,11 +208,7 @@ export default function ComprasPage() {
                         <div className="flex items-center gap-2 text-gray-600">
                           <Calendar className="w-4 h-4" />
                           <span>
-                            {new Date(compra.fecha.split('T')[0] + 'T12:00:00').toLocaleDateString('es-PE', {
-                              day: '2-digit',
-                              month: 'long',
-                              year: 'numeric'
-                            })}
+                            {formatDate(compra.fecha)}
                           </span>
                         </div>
                       </div>
