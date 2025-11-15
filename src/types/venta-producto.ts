@@ -25,7 +25,6 @@ export enum EstadoVenta {
 export interface DetalleVentaDto {
   idProducto: string;
   cantidad: number;
-  precioUnitario: number;
 }
 
 // 🔥 Para RECIBIR del backend (incluye producto completo)

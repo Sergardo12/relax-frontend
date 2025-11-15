@@ -93,16 +93,19 @@ export default function ModalNuevaVenta({ onClose, onSuccess }: Props) {
     setDetalles(detalles.filter((_, i) => i !== index));
   }
 
-  // Cálculos
-  const subtotal = detalles.reduce((sum, d) => {
-    const precio = parseFloat(d.precioUnitario) || 0;
-    return sum + (d.cantidad * precio);
-  }, 0);
+ // Cálculos (los precios YA incluyen IGV)
+const subtotalConIGV = detalles.reduce((sum, d) => {
+  const precio = parseFloat(d.precioUnitario) || 0;
+  return sum + (d.cantidad * precio);
+}, 0);
 
-  const descuentoNum = parseFloat(descuento) || 0;
-  const subtotalConDescuento = subtotal - descuentoNum;
-  const igv = subtotalConDescuento * 0.18;
-  const total = subtotalConDescuento + igv;
+const descuentoNum = parseFloat(descuento) || 0;
+const totalConDescuento = subtotalConIGV - descuentoNum;
+
+// Descomponer el IGV (los precios ya lo incluyen)
+const base = totalConDescuento / 1.18;
+const igv = totalConDescuento - base;
+const total = totalConDescuento;
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -145,7 +148,6 @@ export default function ModalNuevaVenta({ onClose, onSuccess }: Props) {
         detalles: detalles.map(d => ({
           idProducto: d.idProducto,
           cantidad: d.cantidad,
-          precioUnitario: parseFloat(d.precioUnitario)
         }))
       };
 
@@ -349,27 +351,27 @@ export default function ModalNuevaVenta({ onClose, onSuccess }: Props) {
                       </div>
 
                       {/* Cantidad */}
-<div className="w-24">
-  <label className="block text-xs text-gray-600 mb-1">Cantidad</label>
-  <input
-    type="text"
-    inputMode="numeric"
-    value={detalle.cantidad}
-    onChange={(e) => actualizarCantidad(index, e.target.value)}
-    className="w-full px-2 py-1 border border-gray-300 rounded text-sm"
-  />
-</div>
+                      <div className="w-24">
+                        <label className="block text-xs text-gray-600 mb-1">Cantidad</label>
+                        <input
+                          type="text"
+                          inputMode="numeric"
+                          value={detalle.cantidad}
+                          onChange={(e) => actualizarCantidad(index, e.target.value)}
+                          className="w-full px-2 py-1 border border-gray-300 rounded text-sm"
+                        />
+                      </div>
 
-{/* Precio - NO EDITABLE */}
-<div className="w-28">
-  <label className="block text-xs text-gray-600 mb-1">Precio S/</label>
-  <input
-    type="text"
-    value={detalle.precioUnitario}
-    disabled
-    className="w-full px-2 py-1 border border-gray-300 rounded text-sm bg-gray-100 cursor-not-allowed"
-  />
-</div>
+                      {/* Precio - NO EDITABLE */}
+                      <div className="w-28">
+                        <label className="block text-xs text-gray-600 mb-1">Precio S/</label>
+                        <input
+                          type="text"
+                          value={detalle.precioUnitario}
+                          disabled
+                          className="w-full px-2 py-1 border border-gray-300 rounded text-sm bg-gray-100 cursor-not-allowed"
+                        />
+                      </div>
 
                       {/* Subtotal */}
                       <div className="w-28">
@@ -433,8 +435,8 @@ export default function ModalNuevaVenta({ onClose, onSuccess }: Props) {
           <div className="bg-gradient-to-r from-green-50 to-emerald-50 rounded-xl p-6 border-2 border-green-200">
             <div className="space-y-2">
               <div className="flex justify-between text-sm">
-                <span className="text-gray-600">Subtotal:</span>
-                <span className="font-semibold text-gray-800">S/ {subtotal.toFixed(2)}</span>
+                <span className="text-gray-600">Subtotal (con IGV):</span>
+                <span className="font-semibold text-gray-800">S/ {subtotalConIGV.toFixed(2)}</span>
               </div>
               {descuentoNum > 0 && (
                 <div className="flex justify-between text-sm">
