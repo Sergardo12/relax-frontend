@@ -21,6 +21,7 @@ import { toast } from "sonner";
 import Layout from "@/components/layouts/Layout";
 import ModalNuevoGasto from "@/components/domain/administrador/ModalNuevoGasto";
 import ModalDetalleGasto from "@/components/domain/administrador/ModalDetalleGasto";
+import { esHoy } from "@/lib/utils/date";
 
 
 export default function GastosPage() {
@@ -93,12 +94,9 @@ export default function GastosPage() {
   }
 
   const totalGastos = gastos.reduce((sum, g) => sum + g.total, 0);
-  const gastosHoy = gastos.filter(g => {
-    const hoy = new Date().toISOString().split('T')[0];
-    return g.fecha === hoy;
-  }).length;
+  const gastosHoy = gastos.filter(g => esHoy(g.fecha)).length;
   const totalHoy = gastos
-    .filter(g => g.fecha === new Date().toISOString().split('T')[0])
+    .filter(g => esHoy(g.fecha))
     .reduce((sum, g) => sum + g.total, 0);
 
   const categoriasLabels: Record<string, string> = {
