@@ -20,6 +20,7 @@ import { toast } from "sonner";
 import Layout from "@/components/layouts/Layout";
 import ModalNuevaCompra from "@/components/domain/administrador/ModalNuevaCompra";
 import ModalDetalleCompra from "@/components/domain/administrador/ModalDetalleCompra";
+import { esHoy } from "@/lib/utils/date";
 
 
 export default function ComprasPage() {
@@ -87,10 +88,10 @@ export default function ComprasPage() {
   }
 
   const totalCompras = compras.reduce((sum, c) => sum + c.total, 0);
-  const comprasHoy = compras.filter(c => {
-    const hoy = new Date().toISOString().split('T')[0];
-    return c.fecha === hoy;
-  }).length;
+  const comprasHoy = compras.filter(c => esHoy(c.fecha)).length;
+  const totalHoy = compras
+    .filter(c => esHoy(c.fecha))
+    .reduce((sum, c) => sum + c.total, 0);
 
   if (authLoading || !isAuthenticated) return null;
 
