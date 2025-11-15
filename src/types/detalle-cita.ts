@@ -26,9 +26,9 @@ export interface DetalleCitaResponse {
   cita: CitaResponse;
   servicio: ServicioResponse;
   colaborador: ColaboradorResponse;
-  precioUnitario: number;
+  precioUnitario: string;
   cantidad: number;
-  subtotal: number;
+  subtotal: string;
   esConMembresia: boolean;
   observaciones?: string;
   diagnostico?: string;
