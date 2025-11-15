@@ -6,7 +6,7 @@ import { useEffect, useState } from "react";
 import { useAuthGuard } from "@/hooks/useAuthGuard";
 import { citaService } from "@/services/api";
 import { CitaResponse, CitaEstado } from "@/types";
-import { Calendar, Search, Filter, Eye, Loader2 } from "lucide-react";
+import { Calendar, Search, Filter, Eye, Loader2, User } from "lucide-react";
 import { toast } from "sonner";
 import { formatDate } from "@/lib/utils/date";
 import Modal from "@/components/domain/shared/Modal";
@@ -198,20 +198,99 @@ export default function CitasAdminPage() {
       </div>
 
       {/* Modal de detalle */}
-      {citaSeleccionada && (
-        <Modal
-          isOpen={!!citaSeleccionada}
-          onClose={() => setCitaSeleccionada(null)}
-          title="Detalle de Cita"
-          subtitle={`Cita de ${citaSeleccionada.paciente.nombres} ${citaSeleccionada.paciente.apellidos}`}
-          icon={<Calendar className="w-6 h-6" />}
-        >
-          <div className="space-y-4">
-            <p>Aquí irá el contenido del modal...</p>
-            {/* Por ahora solo muestra info básica */}
+{citaSeleccionada && (
+  <Modal
+    isOpen={!!citaSeleccionada}
+    onClose={() => setCitaSeleccionada(null)}
+    title="Detalle de Cita"
+    subtitle={`ID: ${citaSeleccionada.id.slice(0, 8)}`}
+    icon={<Calendar className="w-6 h-6" />}
+    size="xl"
+  >
+    <div className="space-y-6">
+      
+      {/* Info del Paciente */}
+      <div className="bg-gradient-to-r from-blue-50 to-cyan-50 rounded-xl p-5 border border-blue-200">
+        <h3 className="font-semibold text-gray-800 mb-3 flex items-center gap-2">
+          <User className="w-5 h-5 text-blue-600" />
+          Información del Paciente
+        </h3>
+        <div className="grid grid-cols-2 gap-4">
+          <div>
+            <p className="text-sm text-gray-600">Nombre Completo</p>
+            <p className="font-semibold text-gray-800">
+              {citaSeleccionada.paciente.nombres} {citaSeleccionada.paciente.apellidos}
+            </p>
           </div>
-        </Modal>
-      )}
+          <div>
+            <p className="text-sm text-gray-600">DNI</p>
+            <p className="font-semibold text-gray-800">{citaSeleccionada.paciente.dni}</p>
+          </div>
+          <div>
+            <p className="text-sm text-gray-600">Teléfono</p>
+            <p className="font-semibold text-gray-800">{citaSeleccionada.paciente.telefono}</p>
+          </div>
+          <div>
+            <p className="text-sm text-gray-600">Fecha de Nacimiento</p>
+            <p className="font-semibold text-gray-800">
+              {formatDate(citaSeleccionada.paciente.fechaNacimiento)}
+            </p>
+          </div>
+          <div>
+            <p className="text-sm text-gray-600">Correo</p>
+            <p className="font-semibold text-gray-800">{citaSeleccionada.paciente.usuario.correo}</p>
+          </div>
+        </div>
+      </div>
+
+      {/* Info de la Cita */}
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+        <div className="bg-gray-50 rounded-xl p-4">
+          <p className="text-sm text-gray-600 mb-1">Fecha</p>
+          <p className="font-semibold text-gray-800">{formatDate(citaSeleccionada.fecha)}</p>
+        </div>
+        <div className="bg-gray-50 rounded-xl p-4">
+          <p className="text-sm text-gray-600 mb-1">Hora</p>
+          <p className="font-semibold text-gray-800 text-lg">🕐 {citaSeleccionada.hora}</p>
+        </div>
+        <div className="bg-gray-50 rounded-xl p-4">
+          <p className="text-sm text-gray-600 mb-1">Estado</p>
+          <span className={`inline-block px-3 py-1 rounded-full text-xs font-semibold ${getEstadoColor(citaSeleccionada.estado)}`}>
+            {citaSeleccionada.estado}
+          </span>
+        </div>
+        <div className="bg-gray-50 rounded-xl p-4">
+          <p className="text-sm text-gray-600 mb-1">Estado Pago</p>
+          <span className={`inline-block px-3 py-1 rounded-full text-xs font-semibold ${
+            citaSeleccionada.estadoPago === 'pagado' 
+              ? 'bg-green-100 text-green-700' 
+              : 'bg-red-100 text-red-700'
+          }`}>
+            {citaSeleccionada.estadoPago}
+          </span>
+        </div>
+      </div>
+      {/* Acciones */}
+      <div className="flex gap-3 pt-4 border-t">
+        <button
+          onClick={() => setCitaSeleccionada(null)}
+          className="flex-1 px-4 py-2.5 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition font-medium"
+        >
+          Cerrar
+        </button>
+        <button
+          onClick={() => {
+            // TODO: Implementar cambio de estado
+            toast.info('Función en desarrollo');
+          }}
+          className="flex-1 px-4 py-2.5 bg-cyan-600 text-white rounded-lg hover:bg-cyan-700 transition font-medium"
+        >
+          Cambiar Estado
+        </button>
+      </div>
+    </div>
+  </Modal>
+)}
     </div>
   );
 }
